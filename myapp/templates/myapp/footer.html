@@ -1,0 +1,207 @@
+	{% load static %}
+	<!-- FOOTER -->
+	<footer id="footer">
+		<!-- top footer -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">About Us</h3>
+							<p>Welcome to Electro, your number one source for all things electronics.<a href="{% url 'myapp:about' %}" style="color: #D10024;">see more</a></p>
+							<ul class="footer-links">
+								<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+								<li><a href="#"><i class="fa fa-phone"></i>+91 1234567890</a></li>
+								<li><a href="#"><i class="fa fa-envelope-o"></i> Electro7@email.com</a></li>
+								<li><a href="#"><i class="fa fa-facebook"></i> Facebook</a></li>
+								<li><a href="#"><i class="fa fa-instagram"></i> Instagram</a></li>
+								<li><a href="#"><i class="fa fa-whatsapp"></i> WhatsApp</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Categories</h3>
+							<ul class="footer-links">
+								<li><a href="{% url 'myapp:store' %}">Hot deals</a></li>
+								<li><a href="{% url 'myapp:store' %}">Laptops</a></li>
+								<li><a href="{% url 'myapp:store' %}">Smartphones</a></li>
+								<li><a href="{% url 'myapp:store' %}">Cameras</a></li>
+								<li><a href="{% url 'myapp:store' %}">Accessories</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="clearfix visible-xs"></div>
+
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Information</h3>
+							<ul class="footer-links">
+								
+								<li><a href="{% url 'myapp:contact' %}">Contact Us</a></li>
+								<li><a href="{% url 'myapp:privacy' %}">Privacy Policy</a></li>
+								<li><a href="{% url 'myapp:tandc' %}">Terms & Conditions</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Service</h3>
+							<ul class="footer-links">
+								<li><a href="{% url 'myapp:cart' %}">View Cart</a></li>
+								<li><a href="#">Wishlist</a></li>
+								<!-- <li><a href="#">Track My Order</a></li> -->
+								<li><a href="#">Help</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Stay Connected</h3>
+							<ul class="footer-links">
+								{% if user.is_authenticated %}
+									<li>
+										<a href="{% url 'myapp:account' %}">
+											<i class="fa fa-user-o"></i> My Account
+										</a>
+									</li>
+									<li>
+										<a href="{% url 'myapp:logout' %}">
+											<i class="fa fa-sign-out"></i> Logout
+										</a>
+									</li>
+								{% else %}
+									<li>
+										<a href="{% url 'myapp:signup' %}">
+											<i class="fa fa-user-plus"></i> Signup
+										</a>
+									</li>
+									<li>
+										<a href="{% url 'myapp:login' %}">
+											<i class="fa fa-sign-in"></i> Login
+										</a>
+									</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /top footer -->
+
+		<!-- bottom footer -->
+		<div id="bottom-footer" class="section">
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<ul class="footer-payments">
+							
+							<li><a href="#"><img src="{% static 'img/razorpay.png' %}" alt="PhonePe" style="width: 160px; height: auto;"></a></li>
+						</ul>
+							<span class="copyright">
+							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						</span>
+					</div>
+				</div>
+					<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /bottom footer -->
+	</footer>
+	<!-- /FOOTER -->
+
+	<!-- jQuery Plugins -->
+	<!-- <script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/slick.min.js' %}"></script>
+	<script src="{% static 'js/nouislider.min.js' %}"></script>
+	<script src="{% static 'js/jquery.zoom.min.js' %}"></script> -->
+	<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+<!-- Slick Slider -->
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js" crossorigin="anonymous"></script>
+
+<!-- NoUiSlider -->
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js" crossorigin="anonymous"></script>
+
+<!-- jQuery Zoom -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-zoom@1.7.21/jquery.zoom.min.js" crossorigin="anonymous"></script>
+
+
+
+
+
+	<script>
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			$('.products-slick').each(function () {
+				$(this).slick('setPosition');
+			});
+		});
+	</script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script>
+			
+		$(document).ready(function () {
+			$(".quick-view-btn").click(function () {
+				// Get product details from data attributes
+				var name = $(this).data("name");
+				var image = $(this).data("image");
+				var description = $(this).data("description");
+				var price = $(this).data("price");
+	
+				// Update modal content
+				$("#quickViewTitle").text(name);
+				$("#quickViewImage").attr("src", image);
+				$("#quickViewDescription").text(description);
+				$("#quickViewPrice").text(price);
+	
+				// Show modal (Bootstrap 3 syntax)
+				$("#quickViewModal").modal("show");
+			});
+		});
+	</script>
+
+	<script>
+		// Handle dropdown toggle
+		document.addEventListener('DOMContentLoaded', function() {
+			const dropdowns = document.querySelectorAll('.dropdown');
+			
+			dropdowns.forEach(dropdown => {
+				const toggle = dropdown.querySelector('.dropdown-toggle');
+				const menu = dropdown.querySelector('.cart-dropdown, .wishlist-dropdown');
+				
+				toggle.addEventListener('click', function(e) {
+					e.preventDefault();
+					dropdown.classList.toggle('open');
+				});
+			});
+			
+			// Close dropdowns when clicking outside
+			document.addEventListener('click', function(e) {
+				if (!e.target.closest('.dropdown')) {
+					dropdowns.forEach(dropdown => {
+						dropdown.classList.remove('open');
+					});
+				}
+			});
+		});
+		</script>
+</body>
+</html>
+	

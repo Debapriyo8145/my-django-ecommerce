@@ -1,0 +1,304 @@
+{% load static %}
+<title>Electro | My Wishlist</title>
+{% include './header.html' %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="wishlist-page">
+    <div class="wishlist-container">
+        <!-- Wishlist Header -->
+        <div class="wishlist-header">
+            <h2><i class="fas fa-heart"></i> My Wishlist</h2>
+            <div class="wishlist-stats">
+                <span class="items-count">{{ wishlist_items|length }} item{% if wishlist_items|length != 1 %}s{% endif %}</span>
+            </div>
+        </div>
+
+        <!-- Wishlist Content -->
+        <div class="wishlist-content">
+            {% if wishlist_items %}
+                <div class="wishlist-items">
+                    {% for wishlist_item in wishlist_items %}
+                        {% if wishlist_item.item %}
+                        <div class="wishlist-item">
+                            <div class="product-image">
+                                <img src="{{ wishlist_item.item.item_img.url }}" alt="{{ wishlist_item.item.name }}">
+                            </div>
+                            
+                            <div class="product-info">
+                                <h3><a href="{% url 'myapp:product' wishlist_item.item.id %}">{{ wishlist_item.item.name }}</a></h3>
+                                <div class="product-price">₹{{ wishlist_item.item.price|floatformat:2 }}</div>
+                                
+                                <div class="product-actions">
+                                    <form method="post" action="{% url 'myapp:add_to_cart' wishlist_item.item.id %}" class="add-to-cart-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="add-to-cart-btn">
+                                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <form method="post" action="{% url 'myapp:remove_from_wishlist' wishlist_item.item.id %}" class="remove-form">
+                                {% csrf_token %}
+                                <button type="submit" class="remove-btn" title="Remove from Wishlist">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Empty Wishlist -->
+                <div class="empty-wishlist">
+                    <div class="empty-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding items to your wishlist to see them here</p>
+                    <a href="{% url 'myapp:store' %}" class="shop-btn">
+                        <i class="fas fa-store"></i> Browse Products
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Wishlist Page Styles */
+    .wishlist-page {
+        background-color: #f5f5f7;
+        padding: 40px 20px;
+        min-height: calc(100vh - 120px);
+    }
+    
+    .wishlist-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    /* Wishlist Header */
+    .wishlist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 30px;
+        background: linear-gradient(135deg, #D10024 0%, #FF2D4A 100%);
+        color: white;
+    }
+    
+    .wishlist-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .wishlist-stats {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    /* Wishlist Content */
+    .wishlist-content {
+        padding: 30px;
+    }
+    
+    /* Wishlist Items */
+    .wishlist-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    
+    .wishlist-item {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+    }
+    
+    .wishlist-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 200px;
+        padding: 20px;
+        background: #f9f9f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .product-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    .product-info {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .product-info h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+    }
+    
+    .product-info h3 a {
+        color: #333;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    
+    .product-info h3 a:hover {
+        color: #D10024;
+    }
+    
+    .product-price {
+        font-weight: 700;
+        color: #D10024;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .product-actions {
+        margin-top: auto;
+    }
+    
+    .add-to-cart-form {
+        width: 100%;
+    }
+    
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 10px;
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .add-to-cart-btn:hover {
+        background: #333;
+        transform: translateY(-2px);
+    }
+    
+    .remove-form {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .remove-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        color: #D10024;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .remove-btn:hover {
+        background: #D10024;
+        color: white;
+    }
+    
+    /* Empty Wishlist */
+    .empty-wishlist {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        background: #f5f5f7;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: #D10024;
+        font-size: 2rem;
+    }
+    
+    .empty-wishlist h3 {
+        margin: 0 0 10px;
+        color: #333;
+    }
+    
+    .empty-wishlist p {
+        color: #888;
+        margin: 0 0 20px;
+    }
+    
+    .shop-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #D10024;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .shop-btn:hover {
+        background: #B00020;
+        transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .wishlist-items {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .wishlist-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .wishlist-items {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% include './footer.html' %}

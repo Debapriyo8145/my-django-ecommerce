@@ -1,0 +1,334 @@
+{% load static %}
+<title>Electro | Home</title>
+{% include './header.html' %}
+
+<!-- banner section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- shop -->
+            <div class="col-md-4 col-xs-6">
+                <div class="shop">
+                    <div class="shop-img">
+                        <img src="{% static 'img/shop01.png' %}" alt="">
+                    </div>
+                    <div class="shop-body">
+                        <h3>Laptop<br>Collection</h3>
+                        <a href="{% url 'myapp:store' %}?category=laptops" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- /shop -->
+
+            <!-- shop -->
+            <div class="col-md-4 col-xs-6">
+                <div class="shop">
+                    <div class="shop-img">
+                        <img src="{% static 'img/shop03.png' %}" alt="">
+                    </div>
+                    <div class="shop-body">
+                        <h3>Accessories<br>Collection</h3>
+                        <a href="{% url 'myapp:store' %}?category=accessories" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- /shop -->
+
+            <!-- shop -->
+            <div class="col-md-4 col-xs-6">
+                <div class="shop">
+                    <div class="shop-img">
+                        <img src="{% static 'img/shop02.png' %}" alt="">
+                    </div>
+                    <div class="shop-body">
+                        <h3>Cameras<br>Collection</h3>
+                        <a href="{% url 'myapp:store' %}?category=cameras" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- /shop -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /banner section -->
+
+<!-- YOU WOULD LIKE SECTION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Tab Nav -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">You Would Like</h3>
+                    <div class="section-nav">
+                        <ul class="section-tab-nav tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab-laptops">Laptops</a></li>
+                            <li><a data-toggle="tab" href="#tab-smartphones">Smartphones</a></li>
+                            <li><a data-toggle="tab" href="#tab-cameras">Cameras</a></li>
+                            <li><a data-toggle="tab" href="#tab-accessories">Accessories</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /Tab Nav -->
+
+            <!-- Products Tab Content -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="tab-content">
+
+                        <!-- Laptops Tab -->
+                        <div id="tab-laptops" class="tab-pane fade in active">
+                            <div class="products-slick" data-nav="#slick-nav-laptops">
+                                {% for item in laptops %}
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ item.item_img.url }}" alt="item_img">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
+                                        <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
+                                        <h4 class="product-price">₹{{ item.price }}</h4>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist">
+                                                <a href="{% url 'myapp:add_to_wishlist' item.id %}">
+                                                <i class="fa fa-heart-o"></i>
+                                                </a>
+                                                <span class="tooltipp">add to wishlist</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <form action="{% url 'myapp:product' item.id %}">
+                                            {% csrf_token %}
+                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div id="slick-nav-laptops" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Smartphones Tab -->
+                        <div id="tab-smartphones" class="tab-pane fade">
+                            <div class="products-slick" data-nav="#slick-nav-smartphones">
+                                {% for item in smartphones %}
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ item.item_img.url }}"  alt="item_img">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
+                                        <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
+                                        <h4 class="product-price">₹{{ item.price }}</h4>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <a href="{% url 'myapp:add_to_wishlist' item.id %}" class="add-to-wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <form action="{% url 'myapp:product' item.id %}">
+                                            {% csrf_token %}
+                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div id="slick-nav-smartphones" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Cameras Tab -->
+                        <div id="tab-cameras" class="tab-pane fade">
+                            <div class="products-slick" data-nav="#slick-nav-cameras">
+                                {% for item in cameras %}
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ item.item_img.url }}" alt="item_img">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
+                                        <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
+                                        <h4 class="product-price">₹{{ item.price }}</h4>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <a href="{% url 'myapp:add_to_wishlist' item.id %}" class="add-to-wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <form action="{% url 'myapp:product' item.id %}">
+                                            {% csrf_token %}
+                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div id="slick-nav-cameras" class="products-slick-nav"></div>
+                        </div>
+
+                        <!-- Accessories Tab -->
+                        <div id="tab-accessories" class="tab-pane fade">
+                            <div class="products-slick" data-nav="#slick-nav-accessories">
+                                {% for item in accessories %}
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ item.item_img.url }}" alt="item_img">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
+                                        <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
+                                        <h4 class="product-price">₹{{ item.price }}</h4>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <a href="{% url 'myapp:add_to_wishlist' item.id %}" class="add-to-wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <form action="{% url 'myapp:product' item.id %}">
+                                            {% csrf_token %}
+                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div id="slick-nav-accessories" class="products-slick-nav"></div>
+                        </div>
+                        <div id="slick-nav-2" class="products-slick-nav"></div>
+                    </div>
+                    <!-- /tab-content -->
+                </div>
+            </div>
+            <!-- /Products Tab Content -->
+        </div>
+    </div>
+</div>
+<!-- /YOU WOULD LIKE SECTION -->
+
+<!-- HOT DEAL SECTION -->
+<div id="hot-deal" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="hot-deal">
+                    <h2 class="text-uppercase">Limited Stock Available</h2>
+                    <p>upgrade your tech life</p>
+                    <a class="primary-btn cta-btn" href="{% url 'myapp:store' %}">Shop Before They're Gone</a>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /HOT DEAL SECTION -->
+
+<!-- BEST DEALS SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <!-- Section Title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">Best Deals</h3>
+                </div>
+            </div>
+            <!-- /Section Title -->
+
+            <!-- Products tab & slick for laptops -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <!-- tab -->
+                        <div id="tab2" class="tab-pane fade in active">
+                            <div class="products-slick" data-nav="#slick-nav-2">
+                                {% for item in items %}
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ item.item_img.url }}" alt="item_img">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
+                                        <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
+                                        <h4 class="product-price">₹{{ item.price }}</h4>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <a href="{% url 'myapp:add_to_wishlist' item.id %}" class="add-to-wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                                <span class="tooltipp"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <form action="{% url 'myapp:product' item.id %}">
+                                            {% csrf_token %}
+                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div id="slick-nav-2" class="products-slick-nav"></div>
+                        </div>
+                        <!-- /tab -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BEST DEALS SECTION -->
+
+{% include './footer.html' %}
+
