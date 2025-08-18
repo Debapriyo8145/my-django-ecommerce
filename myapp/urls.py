@@ -23,5 +23,7 @@ urlpatterns = [
     path('privacy_policy/', views.privacy, name='privacy'),
     path('terms&conditions/', views.tandc, name='tandc'),
     path('about/', views.about, name='about'),
+    path('order_confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation')
+
 ]
 

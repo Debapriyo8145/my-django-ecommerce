@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-anm27my=nb7iuf-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -130,14 +136,14 @@ USE_TZ = True
 
 # Email Server Setup
 
-# settings.py (never commit this to version control!)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email settings for production (use environment variables in production)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'debapriyo2001@gmail.com'
-EMAIL_HOST_PASSWORD = 'julw omai ygec cmdu' # Load from environment
-DEFAULT_FROM_EMAIL = 'debapriyo2001@gmail.com'
+EMAIL_HOST_USER = 'debapriyo2001@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'oxsgqfzubpjhesvh'  
+DEFAULT_FROM_EMAIL = 'debapriyo2001@gmail.com' 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -163,5 +169,7 @@ AUTH_USER_MODEL = 'myapp.CustomUser'
 #     },
 # ]
 
-RAZORPAY_KEY_ID = 'your_razorpay_key_id'
-RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'
+
+RAZORPAY_KEY_ID = 'rzp_test_HCbsal6tzYeorY'
+RAZORPAY_KEY_SECRET = 'ChYIK2i3eaiW74WmtI9PKmeM'
+

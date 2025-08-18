@@ -141,7 +141,12 @@
                     </div>
                     
                     <button type="submit" form="checkout-form" class="place-order-btn">
-                        <i class="fas fa-lock"></i> Place Order
+                        <i class="fas fa-lock"></i> 
+                        {% if request.POST.payment_method == 'cod' %}
+                                Place Order (Cash on Delivery)
+                            {% else %}
+                                Proceed to Payment
+                            {% endif %}
                     </button>
                 </div>
             </div>

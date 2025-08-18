@@ -37,9 +37,14 @@ class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    
+
     def __str__(self):
         return f"{self.Item.name} (x{self.quantity})"
+    
+    # @property
+    def total(self):
+        return self.Item.price * self.quantity
+
 
 class ProductImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
@@ -83,3 +88,36 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} - {self.subject}"
+    
+   
+
+class Order(models.Model):
+    PAYMENT_CHOICES = [
+        ('cod', 'Cash on Delivery'),
+        ('razorpay', 'Razorpay'),
+    ]
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order_number = models.CharField(max_length=20, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    billing_address = models.TextField()
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    status = models.CharField(max_length=20, default='processing')
+    
+    def __str__(self):
+        return f"Order #{self.order_number}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.quantity}x {self.product.name} (Order #{self.order.order_number})"

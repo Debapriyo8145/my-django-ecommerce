@@ -9,17 +9,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Cart, Wishlist, Item, ContactMessage, Category
+from .models import Cart, Wishlist, Item, ContactMessage, Category, Order, OrderItem
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from itertools import chain
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
-
+from time import timezone
 
 
 
@@ -107,20 +106,113 @@ def store(request):
     }
     return render(request, 'myapp/store.html', context)
 
+
 @login_required
 def checkout(request):
-    cart_items = Cart.objects.filter(user=request.user)
+    cart_items = Cart.objects.filter(user=request.user).select_related('Item')
+    total_price = sum(item.Item.price * item.quantity for item in cart_items)
     
-    # Calculate total for each cart item and overall total
-    for item in cart_items:
-        item.total = item.Item.price * item.quantity  # Add total to each cart item
-    
-    total_price = sum(item.total for item in cart_items)
+    if not cart_items.exists():
+        return redirect('myapp:cart')
     
     if request.method == 'POST':
-        # Your existing POST handling code
-        pass
+        required_fields = ['address', 'phone', 'email']
+        if not all(field in request.POST for field in required_fields):
+            context = {
+                'cart_items': cart_items,
+                'total_price': total_price,
+                'total_price_in_paise': int(total_price * 100),
+                'RAZORPAY_KEY_ID': settings.RAZORPAY_KEY_ID,
+                'error': 'Please fill all required fields'
+            }
+            return render(request, 'myapp/checkout.html', context)
+
+            
+        
+        try:
+            # Create order
+            order = Order.objects.create(
+                user=request.user,
+                order_number=f"ORD-{timezone.now().strftime('%Y%m%d%H%M%S')}-{request.user.id}",
+                payment_method=request.POST.get('payment_method', 'cod'),
+                subtotal=total_price,
+                shipping_cost=0,
+                total_amount=total_price,
+                billing_address=request.POST.get('address'),
+                phone=request.POST.get('phone'),
+                email=request.POST.get('email'),
+                first_name=request.POST.get('first_name', ''),
+                last_name=request.POST.get('last_name', ''),
+                city=request.POST.get('city', ''),
+                zip_code=request.POST.get('zip_code', ''),
+                country=request.POST.get('country', ''),
+                order_notes=request.POST.get('order_notes', '')
+            )
+            
+            # Create order items
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=cart_item.Item,
+                    quantity=cart_item.quantity,
+                    price=cart_item.Item.price,
+                    total=cart_item.Item.price * cart_item.quantity
+                )
+                for cart_item in cart_items
+            ]
+            OrderItem.objects.bulk_create(order_items)
+            
+            # Clear cart
+            cart_items.delete()
+            
+            # Send confirmation email immediately after order creation
+            try:
+                subject = f"Order Confirmation - #{order.order_number}"
+                message = f"""Thank you for your order!
+                
+Order Details:
+- Order Number: {order.order_number}
+- Date: {order.created_at.strftime('%B %d, %Y %I:%M %p')}
+- Total Amount: ₹{order.total_amount:.2f}
+- Payment Method: {order.get_payment_method_display()}
+
+Shipping Address:
+{order.first_name} {order.last_name}
+{order.billing_address}
+{order.city}, {order.zip_code}
+{order.country}
+
+Order Items:
+{"".join([f'- {item.product.name} (₹{item.price:.2f} x {item.quantity})\n' for item in order.items.all()])}
+
+Thank you for shopping with us!
+                """.strip()
+
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [order.email],
+                    fail_silently=False
+                )
+            except Exception as e:
+                print(f"Failed to send email: {e}")
+                # You might want to log this error in production
+            
+            # Redirect to confirmation page
+            return redirect('myapp:order_confirmation', order_id=order.id)
+            
+        except Exception as e:
+            context = {
+                'cart_items': cart_items,
+                'total_price': total_price,
+                'total_price_in_paise': int(total_price * 100),
+                'RAZORPAY_KEY_ID': settings.RAZORPAY_KEY_ID,
+                'error': f'An error occurred: {str(e)}'
+            }
+            return render(request, 'myapp/checkout.html', context)
     
+    # GET request
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
@@ -129,12 +221,17 @@ def checkout(request):
     }
     return render(request, 'myapp/checkout.html', context)
 
-
 @login_required
-def order_confirmation(request):
-    return render(request, 'myapp/order_confirmation.html')
+def order_confirmation(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
 
+    if request.method == "POST":
+        order.confirmed = True
+        order.save()
+        return redirect('myapp:order_confirmation', order_id=order.id)
 
+    return render(request, 'myapp/order_confirmation.html', {'order': order})      
+       
 def privacy(request):
     return render(request, 'myapp/privacy_policy.html')
 
@@ -146,7 +243,7 @@ def about(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('myapp:account')  # Use a named URL pattern
+        return redirect('myapp:account') 
 
     form = AuthenticationForm(request, data=request.POST) if request.method == "POST" else AuthenticationForm()
 

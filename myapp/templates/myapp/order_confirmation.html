@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | Your Store Name</title>
+    <style>
+        :root {
+            --primary-color: #d10024;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #777;
+            --border-color: #e1e1e1;
+            --success-color: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        
+        .success-icon {
+            color: var(--success-color);
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin: 0 0 10px;
+        }
+        
+        .subtitle {
+            color: var(--light-text);
+            margin-bottom: 30px;
+        }
+        
+        .order-details {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: var(--light-text);
+        }
+        
+        .detail-value {
+            text-align: right;
+        }
+        
+        .order-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .order-items th {
+            text-align: left;
+            padding: 10px;
+            background-color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-items td {
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .total-row {
+            font-weight: bold;
+        }
+        
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c70000;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                margin-bottom: 5px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">✓</div>
+            <h1>Thank You For Your Order!</h1>
+            <p class="subtitle">Your order #{{ order.id }} has been received and is being processed.</p>
+        </div>
+        
+        <div class="order-details">
+            <h2>Order Details</h2>
+            <div class="detail-row">
+                <span class="detail-label">Order Number:</span>
+                <span class="detail-value">#{{ order.id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Date:</span>
+                <span class="detail-value">{{ order.created_at|date:"F j, Y" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total:</span>
+                <span class="detail-value">₹{{ order.total_amount|floatformat:2 }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">{{ order.get_payment_method_display }}</span>
+            </div>
+        </div>
+        
+        <div class="order-items-section">
+            <h2>Order Items</h2>
+            <table class="order-items">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <img src="{{ item.product.item_img.url }}" alt="{{ item.product.name }}" class="item-image">
+                                <span style="margin-left: 15px;">{{ item.product.name }}</span>
+                            </div>
+                        </td>
+                        <td>₹{{ item.price|floatformat:2 }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₹{{ item.total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Subtotal:</td>
+                        <td>₹{{ order.subtotal|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: right;">Shipping:</td>
+                        <td>₹{{ order.shipping_cost|floatformat:2 }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Total:</td>
+                        <td>₹{{ order.total_amount|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="actions">
+            <a href="/" class="btn">Continue Shopping</a>
+            <a href="{% url 'myapp:account' %}" class="btn">View Order History</a>
+        </div>
+    </div>
+</body>
+</html>

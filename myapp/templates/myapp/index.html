@@ -278,7 +278,6 @@
             </div>
             <!-- /Section Title -->
 
-            <!-- Products tab & slick for laptops -->
             <div class="col-md-12">
                 <div class="row">
                     <div class="products-tabs">
@@ -289,30 +288,23 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <img src="{{ item.item_img.url }}" alt="item_img">
+                                        <div class="product-category">{{ item.category.cat_name }}</div>
                                     </div>
                                     <div class="product-body">
-                                        <h3 class="product-category">{{ item.category.cat_name }}</h3>
                                         <h3 class="product-name"><a href="{% url 'myapp:product' item.id %}">{{ item.name }}</a></h3>
                                         <h4 class="product-price">₹{{ item.price }}</h4>
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-btns">
-                                            <a href="{% url 'myapp:add_to_wishlist' item.id %}" class="add-to-wishlist">
-                                                <i class="fa fa-heart-o"></i>
-                                                <span class="tooltipp"></span>
+                                        
+                                        <div class="product-actions">
+                                            <button class="add-to-wishlist">
+                                                <a href="{% url 'myapp:add_to_wishlist' item.id %}">
+                                                    <i class="fa fa-heart-o"></i>
+                                                </a>
+                                                <span class="tooltipp">add to wishlist</span>
+                                            </button>
+                                            <a href="{% url 'myapp:product' item.id %}" class="add-to-cart-btn">
+                                                <i class="fa fa-info-circle"></i> More Info
                                             </a>
                                         </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <form action="{% url 'myapp:product' item.id %}">
-                                            {% csrf_token %}
-                                            <button class="add-to-cart-btn"><i class="fa fa-info-circle"></i> More Info</button>
-                                        </form>
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -323,6 +315,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
         <!-- /row -->
     </div>
@@ -331,4 +324,69 @@
 <!-- /BEST DEALS SECTION -->
 
 {% include './footer.html' %}
+<style>
+    /* Product Card Styling */
+.product {
+    position: relative;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
 
+.product-img {
+    height: 200px;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+.product-img img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product-body {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 16px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.product-price {
+    font-size: 18px;
+    color: #D10024;
+    font-weight: 700;
+}
+
+.product-rating {
+    color: #FFD700;
+    margin: 5px 0;
+}
+
+.add-to-cart-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: #D10024;
+    color: #FFF;
+    border: none;
+}
+
+.add-to-cart-btn:hover {
+    background: #FF0000;
+    color: #FFF;
+}
+
+.product-btns {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+</style>
